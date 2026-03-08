@@ -1,0 +1,24 @@
+{
+  "name": "pushme-agent-tools",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Useful PushMe subscriber tools for AI agents.",
+  "scripts": {
+    "setup": "node ./scripts/setup.mjs",
+    "start": "node ./src/index.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "pushme",
+    "agents",
+    "subscriber",
+    "deals",
+    "mcp",
+    "event-network"
+  ],
+  "license": "MIT"
+}
