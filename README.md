@@ -2,36 +2,22 @@
 
 This is the start of an AI agent economy.
 
-`pushme-agent-tools` contains concrete subscriber-side tools that let an agent consume PushMe event streams without rebuilding polling, filtering, and queueing logic from scratch.
+`pushme-agent-tools` contains concrete tools that let bots publish into PushMe or consume PushMe event streams without rebuilding the same integration glue each time.
 
-The first tool in this repo is a buyer-side opportunity inbox.
+## Tools
 
-## Buyer Opportunity Inbox
+### 1. Buyer Opportunity Inbox
 
-`buyer-opportunity-inbox` subscribes to PushMe commercial events, scores them, and exposes a small local HTTP API that another agent can poll.
+Subscriber-side local inbox for agents that need a clean queue of buying opportunities.
 
-Use it when an AI agent needs a clean queue of external buying opportunities instead of raw page diffs or retailer-specific scrapers. Bot registration is no-email by default.
-
-### What it does
-
-- registers a subscriber bot with PushMe
-- creates structured subscriptions for `price.*`, `discount.*`, and `stock.*`
-- polls matched events from PushMe Bot Hub
-- scores them into prioritized opportunities
-- exposes a local inbox API on `http://localhost:4095`
-- supports acknowledging opportunities after an agent acts on them
-
-### Quickstart
+Commands:
 
 ```bash
-git clone https://github.com/yodakohl/pushme-agent-tools.git
-cd pushme-agent-tools
-npm install
-npm run setup
-npm start
+npm run setup:buyer-inbox
+npm run start:buyer-inbox
 ```
 
-### Local API
+Local API:
 
 - `GET /health`
 - `GET /api/context`
@@ -39,27 +25,62 @@ npm start
 - `GET /api/opportunities/next`
 - `POST /api/opportunities/:id/ack`
 
-### Minimal polling example
+### 2. Deal Publisher
+
+Publisher-side product monitor that watches one product page and emits normalized commercial events into PushMe.
+
+Commands:
 
 ```bash
-curl -s http://127.0.0.1:4095/api/opportunities/next
+npm run setup:deal-publisher
+npm run start:deal-publisher -- --once --dry-run
+npm run start:deal-publisher
 ```
 
-A downstream agent can poll that endpoint, make a decision, then acknowledge the item:
+Best event types:
+
+- `price.dropped`
+- `discount.started`
+- `discount.changed`
+- `stock.available`
+- `launch.available`
+
+### 3. Webhook Forwarder
+
+Subscriber-side bridge that turns PushMe events into direct webhook calls for another agent or workflow engine.
+
+Commands:
 
 ```bash
-curl -s -X POST http://127.0.0.1:4095/api/opportunities/14/ack
+npm run setup:webhook-forwarder
+npm run start:webhook-forwarder -- --once --dry-run
+npm run start:webhook-forwarder
 ```
 
-### Example agent flow
+The forwarder signs outgoing payloads with `x-pushme-signature` when `WEBHOOK_FORWARDER_SECRET` is set.
 
-1. Run this tool locally.
-2. Point your agent at `GET /api/opportunities/next`.
-3. Let the agent decide whether to buy, notify, or ignore.
-4. Call `POST /api/opportunities/:id/ack` after the agent handled it.
+## Quickstart
 
-### Why this is useful
+```bash
+git clone https://github.com/yodakohl/pushme-agent-tools.git
+cd pushme-agent-tools
+npm install
+```
 
-A lot of agents do not need another dashboard. They need a standing external task inbox with provenance, trust, and a simple decision boundary.
+Then choose one tool:
 
-PushMe gives the event network. This tool gives the agent a local queue.
+```bash
+npm run setup:buyer-inbox
+npm run setup:deal-publisher
+npm run setup:webhook-forwarder
+```
+
+## Why this repo exists
+
+A lot of agents do not need more generic wrappers. They need small runnable components with narrow, useful behavior:
+
+- publish one good event
+- consume one useful stream
+- forward matched events into action
+
+PushMe provides the event network. This repo provides the agent-side building blocks.

@@ -1,12 +1,18 @@
 {
   "name": "pushme-agent-tools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
-  "description": "Useful PushMe subscriber tools for AI agents.",
+  "description": "Useful PushMe subscriber and publisher tools for AI agents.",
   "scripts": {
     "setup": "node ./scripts/setup.mjs",
     "start": "node ./src/index.mjs",
+    "setup:buyer-inbox": "node ./scripts/setup.mjs",
+    "start:buyer-inbox": "node ./src/index.mjs",
+    "setup:deal-publisher": "node ./scripts/setup-deal-publisher.mjs",
+    "start:deal-publisher": "node ./src/dealPublisherIndex.mjs",
+    "setup:webhook-forwarder": "node ./scripts/setup-webhook-forwarder.mjs",
+    "start:webhook-forwarder": "node ./src/webhookForwarderIndex.mjs",
     "test": "node --test"
   },
   "engines": {
@@ -16,8 +22,9 @@
     "pushme",
     "agents",
     "subscriber",
+    "publisher",
     "deals",
-    "mcp",
+    "webhooks",
     "event-network"
   ],
   "license": "MIT"

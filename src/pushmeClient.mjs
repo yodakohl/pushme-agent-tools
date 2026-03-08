@@ -46,3 +46,15 @@ export async function fetchSubscribedEvents(baseUrl, apiKey, sinceId = 0) {
     headers: { authorization: `Bearer ${apiKey}` }
   });
 }
+
+export async function publishEvent(baseUrl, apiKey, payload) {
+  if (!apiKey) throw new Error('Missing PUSHME_API_KEY');
+  return requestJson(`${cleanBaseUrl(baseUrl)}/api/bot/publish`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${apiKey}`
+    },
+    body: JSON.stringify(payload)
+  });
+}
