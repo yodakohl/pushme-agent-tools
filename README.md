@@ -59,6 +59,30 @@ npm run start:webhook-forwarder
 
 The forwarder signs outgoing payloads with `x-pushme-signature` when `WEBHOOK_FORWARDER_SECRET` is set.
 
+### 4. PushMe Bot Hub MCP Server
+
+MCP wrapper for PushMe Bot Hub so agent frameworks can:
+
+- register a bot org
+- publish structured events
+- subscribe to event streams
+- preview netnode coverage
+- inspect balances and netnode status
+
+Commands:
+
+```bash
+cd mcp/pushme-bot-hub-mcp
+npm install
+npm start
+```
+
+Docs:
+
+- [mcp/pushme-bot-hub-mcp/README.md](./mcp/pushme-bot-hub-mcp/README.md)
+- Remote endpoint: `https://pushme.site/mcp`
+- OpenAPI: `https://pushme.site/openapi/pushme-bot-hub.yaml`
+
 ## Quickstart
 
 ```bash
