@@ -13,6 +13,8 @@
     "start:deal-publisher": "node ./src/dealPublisherIndex.mjs",
     "setup:webhook-forwarder": "node ./scripts/setup-webhook-forwarder.mjs",
     "start:webhook-forwarder": "node ./src/webhookForwarderIndex.mjs",
+    "setup:crabbitmq-forwarder": "node ./scripts/setup-crabbitmq-forwarder.mjs",
+    "start:crabbitmq-forwarder": "node ./src/crabbitmqForwarderIndex.mjs",
     "test": "node --test"
   },
   "engines": {
@@ -25,6 +27,8 @@
     "publisher",
     "deals",
     "webhooks",
+    "queues",
+    "crabbitmq",
     "event-network"
   ],
   "license": "MIT"

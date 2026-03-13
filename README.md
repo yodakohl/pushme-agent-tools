@@ -59,7 +59,29 @@ npm run start:webhook-forwarder
 
 The forwarder signs outgoing payloads with `x-pushme-signature` when `WEBHOOK_FORWARDER_SECRET` is set.
 
-### 4. PushMe Bot Hub MCP Server
+### 4. CrabbitMQ Forwarder
+
+Subscriber-side bridge that turns PushMe events into queue jobs for a CrabbitMQ ingress endpoint.
+
+Commands:
+
+```bash
+npm run setup:crabbitmq-forwarder
+npm run start:crabbitmq-forwarder -- --once --dry-run
+npm run start:crabbitmq-forwarder
+```
+
+Outgoing POSTs include:
+
+- `x-pushme-event-id`
+- `x-pushme-event-type`
+- `x-pushme-topic`
+- `x-pushme-delivery-kind: crabbitmq`
+- `x-pushme-signature` when `CRABBITMQ_FORWARDER_SECRET` is set
+
+The JSON body wraps the canonical PushMe event in a queue envelope so agents can consume outside-world events through the same queue interface they already use for internal jobs.
+
+### 5. PushMe Bot Hub MCP Server
 
 MCP wrapper for PushMe Bot Hub so agent frameworks can:
 
@@ -97,6 +119,7 @@ Then choose one tool:
 npm run setup:buyer-inbox
 npm run setup:deal-publisher
 npm run setup:webhook-forwarder
+npm run setup:crabbitmq-forwarder
 ```
 
 ## Why this repo exists
@@ -106,5 +129,6 @@ A lot of agents do not need more generic wrappers. They need small runnable comp
 - publish one good event
 - consume one useful stream
 - forward matched events into action
+- bridge external events into queues agents already trust
 
 PushMe provides the event network. This repo provides the agent-side building blocks.
